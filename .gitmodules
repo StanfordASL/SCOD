@@ -1,0 +1,6 @@
+[submodule "pytorch-hessian-eigenthings"]
+	path = pytorch-hessian-eigenthings
+	url = git@github.com:noahgolmant/pytorch-hessian-eigenthings.git
+[submodule "curvature"]
+	path = curvature
+	url = git@github.com:DLR-RM/curvature.git
