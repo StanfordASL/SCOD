@@ -41,7 +41,7 @@ unc_model = Ensemble(models, dist_fam, **kwargs)
 Clone this repo (including the submodules):
 
 ```
-git clone --recurse-submodules git@github.com:apoorva-sharma/ood-exps.git
+git clone --recurse-submodules git@github.com:StanfordASL/SCOD.git
 ```
 
 Install submodules (required to run LocalEnsemble and KFAC comparisons respectively)
