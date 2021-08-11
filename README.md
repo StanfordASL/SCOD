@@ -44,14 +44,7 @@ Clone this repo (including the submodules):
 git clone --recurse-submodules git@github.com:StanfordASL/SCOD.git
 ```
 
-Install submodules (required to run LocalEnsemble and KFAC comparisons respectively)
-
-```
-pip install -e pytorch-hessian-eigenthings/
-pip install -e curvature/
-```
-
-Install framework
+Install framework (this will autoinstall the required submodules)
 
 ```
 pip install -e .

@@ -1,6 +1,7 @@
 """setup.py for hessian_eigenthings"""
 
 from setuptools import setup, find_packages
+from pathlib import Path
 
 install_requires = [
     'numpy>=1.18.0',
@@ -14,6 +15,8 @@ install_requires = [
     'pandas>=1.0.1',
     'scikit-learn>=0.23.2',
     'seaborn>=0.11.1',
+    f'hessian_eigenthings @ file://localhost/{Path(__file__).parent}/pytorch-hessian-eigenthings/',
+    f'curvature @ file://localhost/{Path(__file__).parent}/curvature/'
 ]
 
 setup(name="nn_ood",
