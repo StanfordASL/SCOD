@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torchvision import models
 from nn_ood.data.taxinet import TaxiNetFull
-from nn_ood.posteriors import LocalEnsemble, SWAG, Ensemble, SCOD, KFAC, Naive
+from nn_ood.posteriors import LocalEnsemble, Ensemble, SCOD, KFAC, Naive
 from nn_ood.distributions import GaussianFixedDiagVar
 import numpy as np
 import matplotlib.pyplot as plt

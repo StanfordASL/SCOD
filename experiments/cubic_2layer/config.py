@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from nn_ood.data.simple_reg import Cubic
-from nn_ood.posteriors import ExtrapUncertainty, Ensemble, SWAGS, KFAC
+from nn_ood.posteriors import LocalEnsemble, SCOD, Ensemble, Naive, KFAC
 from nn_ood.distributions import GaussianFixedDiagVar
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,7 +14,6 @@ FILENAME = "model"
 N_MODELS = 3
 
 LEARNING_RATE = 0.1
-SGD_MOMENTUM = 0.9
 
 LR_DROP_FACTOR = 1.
 EPOCHS_PER_DROP = 20
@@ -99,7 +98,6 @@ dist_fam = GaussianFixedDiagVar(sigma_diag=np.array([3])).to(device)
 opt_class = torch.optim.Adam
 opt_kwargs = {
     'lr': LEARNING_RATE,
-#     'momentum': SGD_MOMENTUM
 }
 sched_class = torch.optim.lr_scheduler.StepLR
 sched_kwargs = {
@@ -108,77 +106,91 @@ sched_kwargs = {
 }    
     
 prep_unc_models = {
-#     'extrap': {
-#         'class': ExtrapUncertainty,
-#         'kwargs': {
-#             'num_eigs': 20,
-#             'device':'gpu',
-#             'full_data':True,
-#         },
-#     },
+    'local_ensemble': {
+        'class': LocalEnsemble,
+        'kwargs': {
+            'num_eigs': 50,
+            'device':'gpu',
+            'full_data': True,
+        },
+    },
+    'scod_SRFT_s304_n50': {
+        'class': SCOD,
+        'kwargs': {
+            'num_samples': 304,
+            'num_eigs': 50,
+            'device':'gpu',
+            'sketch_type': 'srft'
+        },
+    },
+    'scod_SRFT_s304_n50_freeze': {
+        'class': SCOD,
+        'kwargs': {
+            'num_samples': 304,
+            'num_eigs': 50,
+            'device':'gpu',
+            'sketch_type': 'srft'
+        },
+        'freeze': True,
+    },
     'kfac': {
         'class': KFAC,
         'kwargs': {
-            'input_shape': [1],
             'device':'gpu',
-            'scale': 1.,
-            'norm': 1.,
-            'batch_size': 1,
+            'input_shape': [1],
         },
     },
-#     'swags_SRFT_s20_n20': {
-#         'class': SWAGS,
-#         'kwargs': {
-#             'num_samples': 20,
-#             'num_eigs': 5,
-#             'device':'gpu',
-#             'sketch_type': 'srft'
-#         },
-#     },
 }
 
 test_unc_models = {
-    'extrap_n20': {
-        'class': ExtrapUncertainty,
+    'local_ensemble_n50': {
+        'class': LocalEnsemble,
         'kwargs': {
-            'num_eigs': 20,
-            'device':'gpu',
-            'n_y_samp': 1,
+            'num_eigs': 50,
+            'n_y_samp': 2,
+            'device':'gpu'
         },
-        'load_name': 'extrap',
+        'load_name': 'local_ensemble',
         'forward_kwargs': {}
     },
-#     'extrap_n10': {
-#         'class': ExtrapUncertainty,
-#         'kwargs': {
-#             'num_eigs': 50,
-#             'device':'gpu'
-#         },
-#         'load_name': 'extrap',
-#         'forward_kwargs': {
-#             'n_eigs': 10
-#         }
-#     },
-    'kfac': {
+    'SCOD': {
+        'class': SCOD,
+        'kwargs': {
+            'num_eigs': 50,
+            'device':'gpu'
+        },
+        'load_name': 'scod_SRFT_s304_n50',
+        'forward_kwargs': {}
+    },
+    'SCOD_freeze': {
+        'class': SCOD,
+        'kwargs': {
+            'num_eigs': 50,
+            'device':'gpu'
+        },
+        'freeze':True,
+        'load_name': 'scod_SRFT_s304_n50_freeze',
+        'forward_kwargs': {}
+    },
+    'naive': {
+        'class': Naive,
+        'kwargs': {
+            'device':'gpu'
+        },
+        'load_name': None,
+        'forward_kwargs': {}
+    },
+    'kfac_100_10': {
         'class': KFAC,
         'kwargs': {
-            'input_shape': [1],
-            'device':'gpu'
+            'device':'gpu',
+            'input_shape': [1, 28, 28]
         },
         'load_name': 'kfac',
-        'forward_kwargs': {}
-    },
-    'swags_SRFT_s20_n20_post_pred': {
-        'class': SWAGS,
-        'kwargs': {
-            'num_eigs': 5,
-            'batch_size': 4,
-            'learning_rate': 1e-5,
-            'proj_type':'posterior_pred',
-            'device':'gpu'
-        },
-        'load_name': 'swags_SRFT_s20_n20',
-        'forward_kwargs': {}
+        'forward_kwargs': {
+            'norm': 100.,
+            'scale': 10.,
+        }
     },
     'ensemble': {
         'class': Ensemble,
@@ -188,7 +200,7 @@ test_unc_models = {
         'load_name': None,
         'multi_model': True,
         'forward_kwargs': {}
-    }
+    },
 }
 
 # OOD PERFORMANCE TESTS
@@ -200,24 +212,47 @@ out_dist_splits = ['ood']
 
 
 # Visualization
+from nn_ood.utils.viz import summarize_ood_results, plot_perf_vs_runtime
+
 keys_to_compare = [
-                   'swags_SRFT_s20_n20_post_pred',
-                   'kfac',
+                   'SCOD',
+                   'SCOD_freeze',
                    'ensemble', 
-                   'extrap_n20',
+                   'local_ensemble_n50',
+                   'kfac_100_10',
+                   'naive',
+                   'maha',
 ]
 
 colors= [
-#          'xkcd:olive',
-         'xkcd:teal',
-#          'xkcd:green',
-#          'xkcd:darkgreen',
-         'xkcd:darkblue',
-#          'xkcd:aquamarine',
-         'xkcd:red',
-         'xkcd:maroon',
-         'xkcd:orange',
-         'xkcd:coral',
-         'xkcd:blue',
-         'xkcd:purple',
-         'xkcd:violet']
+         'xkcd:azure',
+         'xkcd:electric blue',
+         'xkcd:adobe',
+         'xkcd:mango',
+         'xkcd:blood orange',
+         'xkcd:scarlet',
+         'xkcd:indigo'
+]
+
+plots_to_generate = {
+    'auroc_vs_runtime.pdf': {
+        'summary_fn': summarize_ood_results,
+        'summary_fn_args': [
+            in_dist_splits,
+            out_dist_splits
+        ],
+        'summary_fn_kwargs': {
+            'keys_to_compare': keys_to_compare,
+        },
+        'plot_fn': plot_perf_vs_runtime,
+        'plot_fn_args': [],
+        'plot_fn_kwargs': {
+            'colors': colors,
+            'figsize': [4,2.5],
+            'dpi': 150,
+            'normalize_x': True,
+        },
+        'legend': {},
+        'title': "Cubic",
+    },
+}

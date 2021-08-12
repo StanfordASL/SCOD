@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from nn_ood.data.rotated_mnist import RotatedMNIST
-from nn_ood.posteriors import LocalEnsemble, SWAG, Ensemble, SCOD, KFAC, Naive
+from nn_ood.posteriors import LocalEnsemble, Ensemble, SCOD, KFAC, Naive
 from nn_ood.distributions import GaussianFixedDiagVar
 import numpy as np
     

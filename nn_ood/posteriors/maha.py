@@ -2,11 +2,9 @@ import torch
 from torch import nn
 import numpy as np
 
-from ..second_order import zero_grads
-from ..sketching import sketch_args, Projector
 from copy import deepcopy
 
-from tqdm import trange, tqdm
+from tqdm import tqdm
 
 def get_features_and_classifier(model):
     """works for nn.Sequential with last linear layer"""

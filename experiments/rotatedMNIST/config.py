@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from nn_ood.data.rotated_mnist import RotatedMNIST
-from nn_ood.posteriors import LocalEnsemble, SWAG, Ensemble, SCOD, KFAC, Naive
+from nn_ood.posteriors import LocalEnsemble, Ensemble, SCOD, KFAC, Naive
 from nn_ood.distributions import GaussianFixedDiagVar
 import numpy as np
 import matplotlib.pyplot as plt
@@ -183,9 +183,6 @@ test_unc_models = {
         'class': SCOD,
         'kwargs': {
             'num_eigs': 50,
-            'batch_size': 4,
-            'learning_rate': 1e-5,
-            'proj_type':'ortho',
             'device':'gpu'
         },
         'load_name': 'scod_SRFT_s304_n50',
@@ -195,9 +192,6 @@ test_unc_models = {
         'class': SCOD,
         'kwargs': {
             'num_eigs': 50,
-            'batch_size': 4,
-            'learning_rate': 1e-5,
-            'proj_type':'ortho',
             'device':'gpu'
         },
         'freeze': True,

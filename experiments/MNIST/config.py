@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from nn_ood.data.mnist import MNIST
-from nn_ood.posteriors import LocalEnsemble, SWAG, Ensemble, SCOD, KFAC, Naive, Mahalanobis
+from nn_ood.posteriors import LocalEnsemble, Ensemble, SCOD, KFAC, Naive, Mahalanobis
 from nn_ood.distributions import CategoricalLogit
 import numpy as np
 import matplotlib.pyplot as plt
@@ -118,114 +118,106 @@ sched_kwargs = {
 }    
     
 prep_unc_models = {
-#     'local_ensemble100': {
-#         'class': LocalEnsemble,
-#         'kwargs': {
-#             'num_eigs': 100,
-#             'device':'gpu',
-#         },
-#     },
-#     'kfac': {
-#         'class': KFAC,
-#         'kwargs': {
-#             'device':'gpu',
-#             'input_shape': [1, 28, 28]
-#         },
-#     },
-#     'scod_SRFT_s604_n100': {
-#         'class': SCOD,
-#         'kwargs': {
-#             'num_samples': 604,
-#             'num_eigs': 100,
-#             'device':'gpu',
-#             'sketch_type': 'srft'
-#         },
-#     },
-#     'scod_SRFT_s604_n100_freeze': {
-#         'class': SCOD,
-#         'kwargs': {
-#             'num_samples': 604,
-#             'num_eigs': 100,
-#             'device':'gpu',
-#             'sketch_type': 'srft'
-#         },
-#         'freeze': True,
-#     },
-#     'scod_SRFT_s64_n10': {
-#         'class': SCOD,
-#         'kwargs': {
-#             'num_samples': 64,
-#             'num_eigs': 10,
-#             'device':'gpu',
-#             'sketch_type': 'srft'
-#         },
-#     },
-    'maha': {
-        'class': Mahalanobis,
+    'local_ensemble100': {
+        'class': LocalEnsemble,
         'kwargs': {
-            'device': 'gpu',
-            'num_classes': 5,
-            "feat_dim": 288,
-        }
+            'num_eigs': 100,
+            'device':'gpu',
+        },
+    },
+    'kfac': {
+        'class': KFAC,
+        'kwargs': {
+            'device':'gpu',
+            'input_shape': [1, 28, 28]
+        },
+    },
+    'scod_SRFT_s604_n100': {
+        'class': SCOD,
+        'kwargs': {
+            'num_samples': 604,
+            'num_eigs': 100,
+            'device':'gpu',
+            'sketch_type': 'srft'
+        },
+    },
+    'scod_SRFT_s604_n100_freeze': {
+        'class': SCOD,
+        'kwargs': {
+            'num_samples': 604,
+            'num_eigs': 100,
+            'device':'gpu',
+            'sketch_type': 'srft'
+        },
+        'freeze': True,
+    },
+    'scod_SRFT_s64_n10': {
+        'class': SCOD,
+        'kwargs': {
+            'num_samples': 64,
+            'num_eigs': 10,
+            'device':'gpu',
+            'sketch_type': 'srft'
+        },
     }
 }
 
 test_unc_models = {
-#     'local_ensemble_n100': {
-#         'class': LocalEnsemble,
-#         'kwargs': {
-#             'num_eigs': 100,
-#             'device':'gpu',
-#             'n_y_samp': 5,
-#         },
-#         'load_name': 'local_ensemble100',
-#         'forward_kwargs': {}
-#     },
-#     'local_ensemble_n50': {
-#         'class': LocalEnsemble,
-#         'kwargs': {
-#             'num_eigs': 100,
-#             'device':'gpu',
-#             'n_y_samp': 5,
-#         },
-#         'load_name': 'local_ensemble100',
-#         'forward_kwargs': {
-#             'n_eigs': 50
-#         }
-#     },
-#     'local_ensemble_n20': {
-#         'class': LocalEnsemble,
-#         'kwargs': {
-#             'num_eigs': 100,
-#             'device':'gpu',
-#             'n_y_samp': 5,
-#         },
-#         'load_name': 'local_ensemble100',
-#         'forward_kwargs': {
-#             'n_eigs': 20,
-#         }
-#     },
-#     'local_ensemble_n10': {
-#         'class': LocalEnsemble,
-#         'kwargs': {
-#             'num_eigs': 100,
-#             'device':'gpu',
-#             'n_y_samp': 5,
-#         },
-#         'load_name': 'local_ensemble100',
-#         'forward_kwargs': {
-#             'n_eigs': 10
-#         }
-#     },
-#     'kfac': {
-#         'class': KFAC,
-#         'kwargs': {
-#             'device':'gpu',
-#             'input_shape': [1, 28, 28]
-#         },
-#         'load_name': 'kfac',
-#         'forward_kwargs': {}
-#     },
+    'local_ensemble_n100': {
+        'class': LocalEnsemble,
+        'kwargs': {
+            'num_eigs': 100,
+            'device':'gpu',
+            'n_y_samp': 5,
+        },
+        'load_name': 'local_ensemble100',
+        'forward_kwargs': {}
+    },
+    'local_ensemble_n50': {
+        'class': LocalEnsemble,
+        'kwargs': {
+            'num_eigs': 100,
+            'device':'gpu',
+            'n_y_samp': 5,
+        },
+        'load_name': 'local_ensemble100',
+        'forward_kwargs': {
+            'n_eigs': 50
+        }
+    },
+    'local_ensemble_n20': {
+        'class': LocalEnsemble,
+        'kwargs': {
+            'num_eigs': 100,
+            'device':'gpu',
+            'n_y_samp': 5,
+        },
+        'load_name': 'local_ensemble100',
+        'forward_kwargs': {
+            'n_eigs': 20,
+        }
+    },
+    'local_ensemble_n10': {
+        'class': LocalEnsemble,
+        'kwargs': {
+            'num_eigs': 100,
+            'device':'gpu',
+            'n_y_samp': 5,
+        },
+        'load_name': 'local_ensemble100',
+        'forward_kwargs': {
+            'n_eigs': 10
+        }
+    },
+    'kfac': {
+        'class': KFAC,
+        'kwargs': {
+            'device':'gpu',
+            'input_shape': [1, 28, 28]
+        },
+        'load_name': 'kfac',
+        'forward_kwargs': {}
+    },
     'SCOD': {
         'class': SCOD,
         'kwargs': {
@@ -237,18 +229,18 @@ test_unc_models = {
             'n_eigs':300,
         }
     },
-#     'SCOD_freeze': {
-#         'class': SCOD,
-#         'kwargs': {
-#             'num_eigs': 100,
-#             'device':'gpu'
-#         },
-#         'freeze':True,
-#         'load_name': 'scod_SRFT_s604_n100_freeze',
-#         'forward_kwargs': {
-#             'n_eigs':300,
-#         }
-#     },
+    'SCOD_freeze': {
+        'class': SCOD,
+        'kwargs': {
+            'num_eigs': 100,
+            'device':'gpu'
+        },
+        'freeze':True,
+        'load_name': 'scod_SRFT_s604_n100_freeze',
+        'forward_kwargs': {
+            'n_eigs':300,
+        }
+    },
     'naive': {
         'class': Naive,
         'kwargs': {
@@ -264,16 +256,6 @@ test_unc_models = {
         },
         'load_name': None,
         'multi_model': True,
-        'forward_kwargs': {}
-    },
-    'maha': {
-        'class': Mahalanobis,
-        'kwargs': {
-            'device': 'gpu',
-            'num_classes': 5,
-            "feat_dim": 288,
-        },
-        'load_name': 'maha',
         'forward_kwargs': {}
     }
 }
@@ -316,7 +298,7 @@ def viz_transforms(idx=0, unc_model=None, model=None):
 
 # Visualization
 
-from nn_ood.utils.viz import summarize_ood_results, summarize_ood_results_by_error, plot_perf_vs_runtime
+from nn_ood.utils.viz import summarize_ood_results, plot_perf_vs_runtime
 
 keys_to_compare = [
     'SCOD',

@@ -86,13 +86,9 @@ class LinearSketch():
         """
         returns Q (N x k), X (k x M) such that A ~= QX
         """
-        print(self.Y.shape)
-        Q,_ = torch.qr(self.Y) # (N, k)
-        print(Q.shape)
-        U,T = torch.qr( self.Psi_fn( Q ) ) # (l, k), (k, k)
-        print(U.shape, T.shape)
+        Q,_ = torch.linalg.qr(self.Y,'reduced') # (N, k)
+        U,T = torch.linalg.qr( self.Psi_fn( Q ), 'reduced' ) # (l, k), (k, k)
         X,_ = torch.triangular_solve(U.t() @ self.W, T) # (k, N)
-        print(X.shape)
 
         return Q, X
 
@@ -113,9 +109,7 @@ class LinearSketch():
         returns U (N x 2k), S (2k x 2k) such that A ~= U S U^T
         """
         Q,X = self.low_rank_approx()
-        print(Q.shape)
-        U,T = torch.qr(torch.cat([Q, X.t()], dim=1)) # (N, 2k), (2k, 2k)
-        print(U.shape, T.shape)
+        U,T = torch.linalg.qr(torch.cat([Q, X.t()], dim=1), 'reduced') # (N, 2k), (2k, 2k)
         del Q, X
         T1 = T[:,:self.k] # (2k, k)
         T2 = T[:,self.k:2*self.k] # (2k, k)
@@ -129,7 +123,7 @@ class LinearSketch():
         returns U (N x r), D (r) such that A ~= U diag(D) U^T
         """
         U, S = self.sym_low_rank_approx()
-        D, V = torch.symeig(S,eigenvectors=True) # (2k), (2k, 2k)
+        D, V = torch.linalg.eigh(S) # (2k), (2k, 2k)
         D = D[-r:]
         V = V[:,-r:] # (2k, r)
         U = U @ V # (N, r)

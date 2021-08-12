@@ -44,7 +44,7 @@ Clone this repo (including the submodules):
 git clone --recurse-submodules git@github.com:StanfordASL/SCOD.git
 ```
 
-Install framework (this will autoinstall the required submodules)
+Install the framework (this will autoinstall the required submodules)
 
 ```
 pip install -e .

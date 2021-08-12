@@ -2,10 +2,7 @@ import torch
 from torch import nn
 import numpy as np
 
-from ..second_order import zero_grads
 from copy import deepcopy
-
-from tqdm import trange, tqdm
 
 base_config = {
     'device': 'cpu',

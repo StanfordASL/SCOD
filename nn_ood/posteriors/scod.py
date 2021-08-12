@@ -2,11 +2,10 @@ import torch
 from torch import nn
 import numpy as np
 
-from ..second_order import zero_grads
 from ..sketching import sketch_args, Projector
 from copy import deepcopy
 
-from tqdm import trange, tqdm
+from tqdm import tqdm
 
 base_config = {
     'device': 'cpu', # device to use @TODO: replace with torch.device
@@ -124,7 +123,7 @@ class SCOD(nn.Module):
         assert len(vec.shape) == 1
         grad_vecs = []
         for j in range(vec.shape[0]):
-            zero_grads(self.model)
+            self.model.zero_grad(set_to_none=True)
             vec[j].backward(retain_graph=True)
             g = self._get_grad_vec().detach()
             grad_vecs.append(g)

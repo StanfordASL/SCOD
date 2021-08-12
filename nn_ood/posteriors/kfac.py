@@ -2,13 +2,12 @@ import torch
 from torch import nn
 import numpy as np
 
-from ..second_order import zero_grads
 from copy import deepcopy
 
 from curvature.sampling import invert_factors, sample_and_replace_weights
 from curvature import fisher
 
-from tqdm import trange, tqdm
+from tqdm import tqdm
 
 
 
