@@ -5,9 +5,8 @@ from pathlib import Path
 
 install_requires = [
     'numpy>=1.18.0',
-    'torch>=1.7',
-    'torchvision>=0.7.0',
-    'torch-dct>=0.1.5',
+    'torch>=1.8',
+    'torchvision>="0.7.0',
     'tensorboard>=2.4.1',
     'tqdm>=4.15.0',
     'scipy>=1.4.1',
